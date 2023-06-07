@@ -22,7 +22,8 @@
 #define MAX_BUF_SIZE 1024
 
 #define DEFAULT_GENERIC_FILE         "/rdklogs/logs/Consolelog.txt.0"
-
+#define TMP_FILE1         "/tmp/Paroduslog1.txt"
+#define TMP_FILE2         "/tmp/Paroduslog2.txt"
 const char *__attribute__((weak)) fetch_generic_file(void);
 
 void __cimplog_generic(const char *module, const char *msg, ...)
@@ -34,7 +35,9 @@ void __cimplog_generic(const char *module, const char *msg, ...)
     char l_cLocalTime[32] = {0};
     time_t l_sNowTime;
     FILE *l_fGenericLogFile = NULL;
-
+    FILE *TmpLofFile1 = NULL;
+    FILE *TmpLofFile2 = NULL;
+    
     time(&l_sNowTime);
     l_sTimeInfo = localtime(&l_sNowTime);
 
@@ -69,6 +72,12 @@ void __cimplog_generic(const char *module, const char *msg, ...)
             fprintf(l_fGenericLogFile, "%s %s", l_cLocalTime, buf);
         }
         fclose(l_fGenericLogFile);
+        if(strcmp(module, "PARODUS") == 0)
+        {
+        TmpLofFile1 = fopen(TMP_FILE1, "a+");        
+        fprintf(TmpLofFile1, "%s [%s] %s", l_cLocalTime, module, buf);
+        fclose(TmpLofFile1);        
+        }
     }
     else //fopen of on boarding file failed atleast write on the console
     {
@@ -80,6 +89,12 @@ void __cimplog_generic(const char *module, const char *msg, ...)
         {
             printf("%s %s", l_cLocalTime, buf);
         }
+         if(strcmp(module, "PARODUS") == 0)
+        {
+         TmpLofFile2 = fopen(TMP_FILE2, "a+");        
+        fprintf(TmpLofFile2, "%s [%s] %s", l_cLocalTime, module, buf);
+        fclose(TmpLofFile2);  
+         }
     }
 }
 
