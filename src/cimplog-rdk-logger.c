@@ -18,20 +18,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <rdk_debug.h>
 
 #include "cimplog.h"
 
 #define DEBUG_INI_NAME		"/etc/debug.ini"
 #define MAX_BUF_SIZE 512
-
+#define LATEST_LOG         "/tmp/ParodusLatestLog.txt"
 const char *__attribute__((weak)) rdk_logger_module_fetch(void);
 static int init_done = 0;
 
 void __cimplog(const char *module, int level, const char *msg, ...)
 {
+    struct tm * l_sTimeInfo;
+    char l_cLocalTime[32] = {0};
+    time_t l_sNowTime;
     static const char *rdk_logger_module = NULL;
-
+    FILE *LastLog = NULL;
     if( !init_done )
     {
         rdk_logger_module = rdk_logger_module_fetch();
@@ -66,6 +70,7 @@ void __cimplog(const char *module, int level, const char *msg, ...)
 
     if (level <= LEVEL_INFO)
     {
+
         va_start(arg_ptr, msg);
         nbytes = vsnprintf(buf, MAX_BUF_SIZE, msg, arg_ptr);
         va_end(arg_ptr);
@@ -78,7 +83,18 @@ void __cimplog(const char *module, int level, const char *msg, ...)
         {
             buf[nbytes] = '\0';
         }
-
+            if(strcmp(module, "PARODUS") == 0)
+            {
+                LastLog = fopen(LATEST_LOG, "w+"); 
+                if(LastLog != NULL)
+                {
+                    time(&l_sNowTime);
+                    l_sTimeInfo = localtime(&l_sNowTime);
+                    strftime(l_cLocalTime,32, "%y%m%d-%X",l_sTimeInfo);
+                    fprintf(LastLog, "%s [%s] %s", l_cLocalTime, module, buf);
+                    fclose(LastLog);   
+                }
+            }
         RDK_LOG(_level[0x3 & level], rdk_logger_module, "%s: %s", module, buf);
     }
 
