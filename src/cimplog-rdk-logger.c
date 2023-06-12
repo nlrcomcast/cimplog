@@ -91,7 +91,7 @@ void __cimplog(const char *module, int level, const char *msg, ...)
                     time(&l_sNowTime);
                     l_sTimeInfo = localtime(&l_sNowTime);
                     strftime(l_cLocalTime,32, "%y%m%d-%X",l_sTimeInfo);
-                    fprintf(LastLog, "%s [%s] %s", l_cLocalTime, module, buf);
+                    fprintf(LastLog, "%s %s %d [%s] %s", l_cLocalTime, rdk_logger_module,level,module, buf);
                     fclose(LastLog);   
                 }
             }
