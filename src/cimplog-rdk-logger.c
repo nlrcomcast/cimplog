@@ -25,8 +25,8 @@
 
 #define DEBUG_INI_NAME		"/etc/debug.ini"
 #define MAX_BUF_SIZE 512
-#define LATEST_LOG         "/rdklogs/logs/ParodusLatestLog.txt"
-#define RED_LOG            "/rdklogs/logs/ParodusRedirectLog.txt"
+#define LATEST_LOG         "/tmp/ParodusLatestLog.txt"
+#define RED_LOG            "/tmp/ParodusRedirectLog.txt"
 const char *__attribute__((weak)) rdk_logger_module_fetch(void);
 static int init_done = 0;
 
