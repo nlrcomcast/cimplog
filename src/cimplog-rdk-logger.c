@@ -25,7 +25,8 @@
 
 #define DEBUG_INI_NAME		"/etc/debug.ini"
 #define MAX_BUF_SIZE 512
-#define LATEST_LOG         "/tmp/ParodusLatestLog.txt"
+#define LATEST_LOG         "/rdklogs/logs/ParodusLatestLog.txt"
+#define RED_LOG            "/rdklogs/logs/ParodusRedirectLog.txt"
 const char *__attribute__((weak)) rdk_logger_module_fetch(void);
 static int init_done = 0;
 
@@ -58,6 +59,17 @@ void __cimplog(const char *module, int level, const char *msg, ...)
         //If RDK logger module is not defined, use __cimplog_generic() to capture the logs.
         //The logs will be capture to /rdklogs/logs/Consolelog.txt.0 if available or it
         //will be printed on the console(stdout)
+	FILE *redlog = NULL;
+	if(strcmp(module, "PARODUS") == 0)
+        {
+		redlog = fopen(RED_LOG, "a+");
+		if(redlog != NULL)
+		{
+			fprintf(redlog, "The rdk_logger_module is NULL and logs redirected to Consolelogs\n");
+			fclose(redlog);
+		}
+	}
+
         __cimplog_generic(module, msg);
         return;
     }
@@ -77,15 +89,16 @@ void __cimplog(const char *module, int level, const char *msg, ...)
 
         if( nbytes >=  MAX_BUF_SIZE )	
         {
+            buf[ MAX_BUF_SIZE - 2 ] = '\n';
             buf[ MAX_BUF_SIZE - 1 ] = '\0';
         }
         else
         {
-            buf[nbytes] = '\0';
+            buf[nbytes]= '\0';
         }
             if(strcmp(module, "PARODUS") == 0)
             {
-                LastLog = fopen(LATEST_LOG, "w+"); 
+                LastLog = fopen(LATEST_LOG, "a+");
                 if(LastLog != NULL)
                 {
                     time(&l_sNowTime);
@@ -149,4 +162,3 @@ void __cimplog_rdk_generic(const char *rdk_logger_module, const char *module, in
 
     return;
 }
-
