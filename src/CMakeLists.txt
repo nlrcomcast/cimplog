@@ -33,7 +33,7 @@ set_target_properties(${PROJ_CIMPL}.shared PROPERTIES
 # Yocto build (ie dynamic lib + rdk logger). Other cases may need fixing too.
 # ----------------------------------------------------------------------------
 if (RDK_LOGGER)
-target_link_libraries(${PROJ_CIMPL}.shared rdkloggers log4c)
+target_link_libraries(${PROJ_CIMPL}.shared rdkloggers log4c -lpthread)
 endif (RDK_LOGGER)
 # ----------------------------------------------------------------------------
 
