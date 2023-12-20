@@ -18,7 +18,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <sys/types.h>
 #include "cimplog.h"
 
 #define MAX_BUF_SIZE 1024
