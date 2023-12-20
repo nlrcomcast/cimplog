@@ -28,7 +28,16 @@ int cimplog_debug_level = LEVEL_DEFAULT;
 #else
 int cimplog_debug_level = LEVEL_INFO;
 #endif
+#include <unistd.h>
+#include <sys/syscall.h>
 
+#ifndef SYS_gettid
+#error "SYS_gettid unavailable on this system"
+#endif
+
+#define gettid() ((pid_t)syscall(SYS_gettid))
+
+#include <stdio.h>
 void __cimplog(const char *module, int level, const char *msg, ...)
 {
     static const char *_level[] = { "Error", "Info", "Debug", "Unknown" };
