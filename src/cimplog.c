@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <sys/types.h>
 #include "cimplog.h"
 
 #define MAX_BUF_SIZE 1024
@@ -54,7 +54,7 @@ void __cimplog(const char *module, int level, const char *msg, ...)
     
         clock_gettime(CLOCK_REALTIME, &ts);
 
-        printf("[%09ld][%s][%s]: %s", ts.tv_sec, module, _level[0x3 & level], buf);
+        printf("[%09ld][%s][%s][%d]: %s", ts.tv_sec, module, _level[0x3 & level], buf,gettid());
     }
 }
 
