@@ -62,7 +62,7 @@ void __cimplog(const char *module, int level, const char *msg, ...)
     
         clock_gettime(CLOCK_REALTIME, &ts);
 
-        printf("[%09ld][%s][%s][%d]: %s", ts.tv_sec, module, _level[0x3 & level],gettid(), buf);
+        printf("[%09ld][%s][%s][%d]: %s", ts.tv_sec, module, _level[0x3 & level],syscall(SYS_gettid), buf);
     }
 }
 
